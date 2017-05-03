@@ -21,17 +21,17 @@ public class Display extends Canvas implements Runnable {
 	
 	@Override
 	public void paint(Graphics g) {
-		if (Handler.tree != null) {
-			g.drawImage(Handler.tree.getImage(),0,0,null);
-		}
 	}
 	
 	@Override
 	public void run() {
 		createBufferStrategy(2);
 		while (true) {
-			
-			repaint();
+			Graphics g = getBufferStrategy().getDrawGraphics();
+			if (Handler.tree != null) {
+				g.drawImage(Handler.tree.getImage(),0,0,null);
+			}
+			getBufferStrategy().show();
 			try {
 				Thread.sleep(200);
 			} catch (Exception e) {

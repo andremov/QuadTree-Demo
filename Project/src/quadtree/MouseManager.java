@@ -16,7 +16,11 @@ public class MouseManager extends MouseAdapter {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		Handler.addPoint(e.getX(), e.getY());
+		if (e.getButton() == 1) {
+			Handler.addPoint(e.getX(), e.getY());
+		} else if (e.getButton() == 3){
+			Handler.tree = new Region(0,0,0);
+		}
 	}
 	
 	
