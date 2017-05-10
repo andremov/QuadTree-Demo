@@ -17,10 +17,12 @@ public class Point extends Node {
 
 	public static int BORDER_WIDTH = 1;
 	public static int POINT_SIZE = 5;
+	private Color color;
 	
 	public Point(int x, int y) {
 		this.x = x-(POINT_SIZE/2f);
 		this.y = y-(POINT_SIZE/2f);
+		this.color = Color.white;
 	}
 
 	@Override
@@ -36,10 +38,17 @@ public class Point extends Node {
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,POINT_SIZE,POINT_SIZE);
 		
-		g.setColor(Color.WHITE);
+		g.setColor(this.color);
 		g.fillRect(BORDER_WIDTH,BORDER_WIDTH,POINT_SIZE-(BORDER_WIDTH*2),POINT_SIZE-(BORDER_WIDTH*2));
 		
 		return image;
+	}
+
+	/**
+	 * @param color the color to set
+	 */
+	public void setColor(Color color) {
+		this.color = color;
 	}
 	
 }

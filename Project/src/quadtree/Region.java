@@ -16,6 +16,7 @@ import java.awt.image.BufferedImage;
 public class Region extends Node {
 
 	public static int BORDER_WIDTH = 1;
+	public static int MAX_DEPTH = 5;
 	
 	private final Node[] children;
 	private final float width;
@@ -82,7 +83,7 @@ public class Region extends Node {
 		
 		if (getChildren()[childNum] == null) {
 			children[childNum] = child;
-		} else {
+		} else if (getDepth()+1 <= MAX_DEPTH) {
 			if (getChildren()[childNum] instanceof Point) {
 				Point oldChild = (Point)getChildren()[childNum];
 				int regionX = (int)((childNum%2) + (this.x*2/this.getWidth()));
@@ -101,12 +102,12 @@ public class Region extends Node {
 		Graphics g = image.getGraphics();
 		
 		g.setColor(Color.white);
-		g.fillRect(0,0, (int)this.getWidth(), (int)this.getHeight());
+		g.drawRect(0,0, (int)this.getWidth()-1, (int)this.getHeight()-1);
 		
-		g.setColor(Color.black);
-		int finalWidth = (int)(this.getWidth()-(BORDER_WIDTH*2));
-		int finalHeight = (int)(this.getWidth()-(BORDER_WIDTH*2));
-		g.fillRect(BORDER_WIDTH,BORDER_WIDTH,finalWidth,finalHeight);
+//		g.setColor(Color.black);
+//		int finalWidth = (int)(this.getWidth()-(BORDER_WIDTH*2));
+//		int finalHeight = (int)(this.getWidth()-(BORDER_WIDTH*2));
+//		g.fillRect(BORDER_WIDTH,BORDER_WIDTH,finalWidth,finalHeight);
 		
 		for (int i = 0; i < getChildren().length; i++) {
 			if (getChildren()[i] != null) {
