@@ -17,6 +17,8 @@ public abstract class Node {
 	protected float y;
 	
 	public abstract BufferedImage getImage();
+	public abstract float distanceTo(Point trigger);
+	public abstract boolean isContained(Point p1, Point p2);
 
 	/**
 	 * @return the x

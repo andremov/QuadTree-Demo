@@ -161,5 +161,35 @@ public class Region extends Node {
 	public int getDepth() {
 		return depth;
 	}
+
+	@Override
+	public float distanceTo(Point trigger) {
+		float x = trigger.getX();
+		float y = trigger.getY();
+		if (x < this.getX()) {
+			x = this.getX();
+		} else if (this.getX() +this.getWidth() < x){
+			x = this.getX() + this.getWidth();
+		}
+		if (y < this.getY()) {
+			y = this.getY();
+		} else if (this.getY() +this.getHeight() < y){
+			y = this.getY() + this.getHeight();
+		}
+		return (new Point(x,y)).distanceTo(trigger);
+	}
 	
+	@Override
+	public boolean isContained(Point p1, Point p2) {
+		int minX = Integer.min((int)p1.getX(),(int)p2.getX());
+		int maxX = Integer.max((int)p1.getX(),(int)p2.getX());
+		int minY = Integer.min((int)p1.getY(),(int)p2.getY());
+		int maxY = Integer.max((int)p1.getY(),(int)p2.getY());
+		
+		boolean top = maxY > this.getY();
+		boolean bottom = minY < this.getY() + this.getHeight();
+		boolean left = maxX > this.getX();
+		boolean right = minX < this.getX() + this.getWidth();
+		return top && bottom && left && right;
+	}
 }
