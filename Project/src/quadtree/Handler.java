@@ -49,6 +49,7 @@ public class Handler implements Runnable {
 			for (int i = 0; i < tree.getChildren().length; i++) {
 				if (tree.getChildren()[i] instanceof Point) {
 					((Point) tree.getChildren()[i]).setLife(((Point) tree.getChildren()[i]).getLife()-1);
+                                        ((Point) tree.getChildren()[i]).setColorChange(5);
 				}
 			}
 		} else {

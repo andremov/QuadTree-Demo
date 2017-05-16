@@ -47,6 +47,7 @@ public class Region extends Node {
 			if (children[i] instanceof Point) {
 				Handler.score = Handler.score + (int)(Math.pow(damage,2));
 				((Point)children[i]).setLife(((Point)children[i]).getLife()-damage);
+				((Point)children[i]).setColorChange(5);
 				if (((Point)children[i]).getLife() <= 0) {
 					children[i] = null;
 					Handler.score = Handler.score + 10;

@@ -20,12 +20,14 @@ public class Point extends Node {
 	private Region parent;
 	private int life;
 	private Color color;
+        private int colorChange;
 	
 	public Point(float x, float y) {
 		this.setX(x-(POINT_SIZE/2f));
 		this.setY(y-(POINT_SIZE/2f));
 		this.color = Color.white;
 		this.life = 5;
+                this.colorChange = 0;
 	}
 
 	public void approachX(int target) {
@@ -55,8 +57,12 @@ public class Point extends Node {
 		
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,POINT_SIZE,POINT_SIZE);
-		
-		g.setColor(this.color);
+		if (this.colorChange > 0) {
+                    this.colorChange--;
+                    g.setColor(Color.red);
+                } else {
+                    g.setColor(this.color);
+                }
 		g.fillRect(BORDER_WIDTH,BORDER_WIDTH,POINT_SIZE-(BORDER_WIDTH*2),POINT_SIZE-(BORDER_WIDTH*2));
 		
 		return image;
@@ -114,4 +120,11 @@ public class Point extends Node {
 	public void setLife(int life) {
 		this.life = life;
 	}
+
+    /**
+     * @param colorChange the colorChange to set
+     */
+    public void setColorChange(int colorChange) {
+        this.colorChange = colorChange;
+    }
 }
