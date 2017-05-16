@@ -21,11 +21,12 @@ public class Control extends JFrame {
 	JButton regionSearchMode;
 	JButton neighborsSearchMode;
 	JButton cleanBtn;
+	JButton playMode;
 	
 	
 	public Control() {
         setLayout(null);
-        setSize(195, 390);
+        setSize(195, 460);
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -97,6 +98,18 @@ public class Control extends JFrame {
 			}
 		});
 		add(cleanBtn);
+		
+		y = y + 70;
+		playMode = new JButton("Jugar");
+		playMode.setSize(180, 60);
+		playMode.setLocation(5, y);
+		playMode.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Handler.startGame();
+			}
+		});
+		add(playMode);
 	}
 	
 }

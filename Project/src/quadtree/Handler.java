@@ -6,16 +6,18 @@
 package quadtree;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
 /**
  *
  * @author Andres
  */
-public abstract class Handler {
+public class Handler implements Runnable {
 
 	public static final int MODE_ADD = 0;
 	public static final int MODE_REGION = 1;
 	public static final int MODE_NEIGHBORS = 2;
+	public static final int MODE_GAME = 3;
 	
 	public static int SCREEN_SIZE = 600;
 
@@ -27,7 +29,42 @@ public abstract class Handler {
 	public static Point selectRegionEnd;
 	public static Point neighborCheck;
 	public static int currentMode;
-	private static int cooldown = 10;
+	private static int paintCooldown = 10;
+	private static int spawnCooldown = 0;
+	private static Thread gameThread;
+	public static int life;
+	public static String attack;
+	public static int score;
+
+	public Handler() {
+		init();
+		life = 50;
+		score = 0;
+		gameThread = new Thread(this);
+		attack = "";
+	}
+	
+	public static void doAttack() {
+		if (attack.isEmpty()) {
+			for (int i = 0; i < tree.getChildren().length; i++) {
+				if (tree.getChildren()[i] instanceof Point) {
+					((Point) tree.getChildren()[i]).setLife(((Point) tree.getChildren()[i]).getLife()-1);
+				}
+			}
+		} else {
+			Region attackZone = tree; 
+			for (int i = 0; i < attack.split("|").length; i++) {
+				int quad = (Integer.parseInt(attack.split("|")[i]))-1;
+				try {
+					attackZone = (Region) attackZone.getChildren()[quad];
+					if (i == attack.split("|").length-1) {
+						attackZone.doDamage(i+1);
+					}
+				} catch (Exception e) { }
+			}
+			attack = "";
+		}
+	}
 	
 	public static void init() {
 		window = new Window(SCREEN_SIZE+CANVAS_X, SCREEN_SIZE+CANVAS_Y);
@@ -38,6 +75,15 @@ public abstract class Handler {
 	
 	public static void clean() {
 		tree = new Region(0,0,0);
+	}
+	
+	public static void startGame() {
+		clean();
+		clearColors(tree);
+		newMode(MODE_GAME);
+		life = 50;
+		score = 0;
+		gameThread.start();
 	}
 	
 	public static void addRandomPoints(int numPoints) {
@@ -98,11 +144,11 @@ public abstract class Handler {
 			clearColors(tree);
 			regionCheck(tree);
 		} else if (currentMode == MODE_ADD) {
-			if (cooldown <= 0) {
+			if (paintCooldown <= 0) {
 				tree.addChild(new Point(x,y));
-				cooldown = 10;
+				paintCooldown = 10;
 			} else {
-				cooldown--;
+				paintCooldown--;
 			}
 		}
 	}
@@ -151,12 +197,66 @@ public abstract class Handler {
 		}
 	}
 	
-	public static void printTree(Region node) {
-		System.out.println(node.getChildrenDescription());
-		for (int i = 0; i < node.getChildren().length; i++) {
-			if (node.getChildren()[i] instanceof Region) {
-				printTree((Region)node.getChildren()[i]);
+	public static void remakeTree() {
+		ArrayList<Point> points = getAllPoints(tree);
+		tree = new Region(0, 0, 0);
+		for (int i = 0; i < points.size(); i++) {
+			
+			points.get(i).approachX(SCREEN_SIZE/2);
+			points.get(i).approachY(SCREEN_SIZE/2);
+			
+			
+			if (points.get(i).distanceTo(new Point(SCREEN_SIZE/2,SCREEN_SIZE/2))< 10) {
+				life = life-1;
+				if (life == 0) {
+					newMode(MODE_ADD);
+					clean();
+					clearColors(tree);
+				}
+			} else {
+				tree.addChild(points.get(i));
 			}
+		}
+	}
+	public static ArrayList<Point> getAllPoints(Node tree) {
+		ArrayList<Point> points = new ArrayList<>();
+		if (tree instanceof Region) {
+			for (int i = 0; i < ((Region) tree).getChildren().length; i++) {
+				if (((Region) tree).getChildren()[i] instanceof Point) {
+					points.add( (Point) ((Region) tree).getChildren()[i] );
+				} else {
+					points.addAll(getAllPoints(((Region) tree).getChildren()[i]));
+				}
+			}
+		}
+		return points;
+	}
+
+	@Override
+	public void run() {
+		while(currentMode == MODE_GAME) {
+			if (spawnCooldown <= 0) {
+				int x = (int)(Math.random()*SCREEN_SIZE);
+				int y;
+				if (x > CANVAS_X-50 || x < 50) {
+					y = (int)(Math.random()*SCREEN_SIZE);
+				} else {
+					y = (int)(Math.random()*50);
+					if (Math.random()*5 > 3.5) {
+						y = y + (SCREEN_SIZE-100);
+					}
+				}
+				tree.addChild(new Point(x,y));
+				spawnCooldown = 5;
+			} else {
+				spawnCooldown--;
+			}
+			
+			remakeTree();
+			
+			try {
+				Thread.sleep(100);
+			} catch (Exception e) { }
 		}
 	}
 	

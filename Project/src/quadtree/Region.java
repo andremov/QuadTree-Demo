@@ -35,18 +35,26 @@ public class Region extends Node {
 		this.width = (float)(maxWidth/(Math.pow(2, depth)));
 		this.height = (float)(maxHeight/(Math.pow(2, depth)));
 		
-		this.x = regionX*this.width;
-		this.y = regionY*this.height;
+		this.setX(regionX*this.width);
+		this.setY(regionY*this.height);
 		
-		this.midPointX = this.x + (this.width/2);
-		this.midPointY = this.y + (this.height/2);
+		this.midPointX = this.getX() + (this.width/2);
+		this.midPointY = this.getY() + (this.height/2);
 	}
-
-	@Override
-	public String toString() {
-		String start = "("+this.x+","+this.y+")";
-		String finish = "("+(this.x+this.width)+","+(this.y+this.height)+")";
-		return "Region"+start+" -> "+finish;
+	
+	public void doDamage(int damage) {
+		for (int i = 0; i < children.length; i++) {
+			if (children[i] instanceof Point) {
+				Handler.score = Handler.score + (int)(Math.pow(damage,2));
+				((Point)children[i]).setLife(((Point)children[i]).getLife()-damage);
+				if (((Point)children[i]).getLife() <= 0) {
+					children[i] = null;
+					Handler.score = Handler.score + 10;
+				}
+			} else if (children[i] instanceof Region) {
+				((Region) children[i]).doDamage(damage);
+			}
+		}
 	}
 	
 	/**
@@ -86,8 +94,8 @@ public class Region extends Node {
 		} else if (getDepth()+1 <= MAX_DEPTH) {
 			if (getChildren()[childNum] instanceof Point) {
 				Point oldChild = (Point)getChildren()[childNum];
-				int regionX = (int)((childNum%2) + (this.x*2/this.getWidth()));
-				int regionY = (int)((childNum/2) + (this.y*2/this.getHeight()));
+				int regionX = (int)((childNum%2) + (this.getX()*2/this.getWidth()));
+				int regionY = (int)((childNum/2) + (this.getY()*2/this.getHeight()));
 
 				children[childNum] = new Region(regionX, regionY, getDepth()+1);
 				((Region) getChildren()[childNum]).addChild(oldChild);
@@ -101,8 +109,10 @@ public class Region extends Node {
 		BufferedImage image = new BufferedImage((int)this.getWidth(), (int)this.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		Graphics g = image.getGraphics();
 		
-		g.setColor(Color.white);
-		g.drawRect(0,0, (int)this.getWidth()-1, (int)this.getHeight()-1);
+		if (!(Handler.currentMode == Handler.MODE_GAME)) {
+			g.setColor(Color.white);
+			g.drawRect(0,0, (int)this.getWidth()-1, (int)this.getHeight()-1);
+		}
 		
 //		g.setColor(Color.black);
 //		int finalWidth = (int)(this.getWidth()-(BORDER_WIDTH*2));

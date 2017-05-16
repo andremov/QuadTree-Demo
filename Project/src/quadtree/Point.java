@@ -17,19 +17,37 @@ public class Point extends Node {
 
 	public static int BORDER_WIDTH = 1;
 	public static int POINT_SIZE = 5;
+	private Region parent;
+	private int life;
 	private Color color;
 	
 	public Point(float x, float y) {
-		this.x = x-(POINT_SIZE/2f);
-		this.y = y-(POINT_SIZE/2f);
+		this.setX(x-(POINT_SIZE/2f));
+		this.setY(y-(POINT_SIZE/2f));
 		this.color = Color.white;
+		this.life = 5;
 	}
 
-	@Override
-	public String toString() {
-		return "Point("+this.x+","+this.y+")";
+	public void approachX(int target) {
+		if ((int)Math.abs(target - getX()) > 2) {
+			if (target > getX()) {
+				setX(getX()+0.5f);
+			} else {
+				setX(getX()-0.5f);
+			}
+		}
 	}
 
+	public void approachY(int target) {
+		if ((int)Math.abs(target - getY()) > 2) {
+			if (target > getY()) {
+				setY(getY()+0.5f);
+			} else {
+				setY(getY()-0.5f);
+			}
+		}
+	}
+	
 	@Override
 	public BufferedImage getImage() {
 		BufferedImage image = new BufferedImage(POINT_SIZE, POINT_SIZE, BufferedImage.TYPE_INT_ARGB);
@@ -67,5 +85,33 @@ public class Point extends Node {
 		boolean inX = minX <= this.getX() && this.getX() <= maxX;
 		boolean inY = minY <= this.getY() && this.getY() <= maxY;
 		return inX && inY;
+	}
+
+	/**
+	 * @return the parent
+	 */
+	public Region getParent() {
+		return parent;
+	}
+
+	/**
+	 * @param parent the parent to set
+	 */
+	public void setParent(Region parent) {
+		this.parent = parent;
+	}
+
+	/**
+	 * @return the life
+	 */
+	public int getLife() {
+		return life;
+	}
+
+	/**
+	 * @param life the life to set
+	 */
+	public void setLife(int life) {
+		this.life = life;
 	}
 }

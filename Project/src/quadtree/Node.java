@@ -13,8 +13,22 @@ import java.awt.image.BufferedImage;
  */
 public abstract class Node {
 
-	protected float x;
-	protected float y;
+	/**
+	 * @param x the x to set
+	 */
+	public void setX(float x) {
+		this.x = x;
+	}
+
+	/**
+	 * @param y the y to set
+	 */
+	public void setY(float y) {
+		this.y = y;
+	}
+
+	private float x;
+	private float y;
 	
 	public abstract BufferedImage getImage();
 	public abstract float distanceTo(Point trigger);

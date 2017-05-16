@@ -15,7 +15,7 @@ public class QuadTree {
 	 * @param args the command line arguments
 	 */
 	public static void main(String[] args) {
-		Handler.init();
+		new Handler();
 	}
 	
 }
