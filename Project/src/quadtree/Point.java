@@ -31,9 +31,9 @@ public class Point extends Node {
 	public void approachX(int target) {
 		if ((int)Math.abs(target - getX()) > 2) {
 			if (target > getX()) {
-				setX(getX()+0.5f);
+				setX(getX()+0.25f);
 			} else {
-				setX(getX()-0.5f);
+				setX(getX()-0.25f);
 			}
 		}
 	}
@@ -41,9 +41,9 @@ public class Point extends Node {
 	public void approachY(int target) {
 		if ((int)Math.abs(target - getY()) > 2) {
 			if (target > getY()) {
-				setY(getY()+0.5f);
+				setY(getY()+0.25f);
 			} else {
-				setY(getY()-0.5f);
+				setY(getY()-0.25f);
 			}
 		}
 	}

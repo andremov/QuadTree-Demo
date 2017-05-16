@@ -58,7 +58,7 @@ public class Handler implements Runnable {
 				try {
 					attackZone = (Region) attackZone.getChildren()[quad];
 					if (i == attack.split("|").length-1) {
-						attackZone.doDamage(i+1);
+						attackZone.doDamage((i+1)*2);
 					}
 				} catch (Exception e) { }
 			}
@@ -81,6 +81,7 @@ public class Handler implements Runnable {
 		clean();
 		clearColors(tree);
 		newMode(MODE_GAME);
+		attack = "";
 		life = 50;
 		score = 0;
 		gameThread.start();
@@ -238,7 +239,7 @@ public class Handler implements Runnable {
 			if (spawnCooldown <= 0) {
 				int x = (int)(Math.random()*SCREEN_SIZE);
 				int y;
-				if (x > CANVAS_X-50 || x < 50) {
+				if (x > SCREEN_SIZE-50 || x < 50) {
 					y = (int)(Math.random()*SCREEN_SIZE);
 				} else {
 					y = (int)(Math.random()*50);
@@ -247,7 +248,7 @@ public class Handler implements Runnable {
 					}
 				}
 				tree.addChild(new Point(x,y));
-				spawnCooldown = 5;
+				spawnCooldown = 10;
 			} else {
 				spawnCooldown--;
 			}
